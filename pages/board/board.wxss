@@ -1,0 +1,181 @@
+/* 概念板块列表页样式 */
+
+.container {
+  min-height: 100vh;
+  background-color: #1A1A2E;
+  padding-bottom: 24px;
+}
+
+/* 搜索栏 */
+.search-bar {
+  padding: 12px 16px;
+  background-color: #16213E;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.search-input {
+  height: 36px;
+  padding: 0 12px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.search-placeholder {
+  color: #666;
+}
+
+/* 排序栏 */
+.sort-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #16213E;
+}
+
+.sort-tag {
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  color: #B0B0B0;
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.sort-tag.active {
+  background-color: #FFD700;
+  color: #1A1A2E;
+  font-weight: 500;
+}
+
+/* 板块列表 */
+.board-list {
+  padding: 0 12px;
+}
+
+.board-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background-color: #16213E;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.board-rank {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.board-item:nth-child(1) .board-rank {
+  background-color: #FFD700;
+  color: #1A1A2E;
+}
+
+.board-item:nth-child(2) .board-rank {
+  background-color: #C0C0C0;
+  color: #1A1A2E;
+}
+
+.board-item:nth-child(3) .board-rank {
+  background-color: #CD7F32;
+  color: #1A1A2E;
+}
+
+.board-item:nth-child(n+4) .board-rank {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #B0B0B0;
+}
+
+.board-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.board-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.board-meta {
+  font-size: 12px;
+  color: #B0B0B0;
+  margin-bottom: 4px;
+}
+
+.meta-item {
+  margin-right: 4px;
+}
+
+.meta-divider {
+  margin: 0 6px;
+  color: #666;
+}
+
+.board-leader {
+  font-size: 12px;
+  color: #FFD700;
+}
+
+.leader-cap {
+  margin-left: 4px;
+  color: #B0B0B0;
+}
+
+.board-change-wrap {
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.board-change {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.board-change.up {
+  color: #E53935;
+}
+
+.board-change.down {
+  color: #43A047;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #B0B0B0;
+}

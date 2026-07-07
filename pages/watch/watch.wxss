@@ -1,0 +1,183 @@
+/* 自选股页面样式 */
+
+.container {
+  min-height: 100vh;
+  background-color: #1A1A2E;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #16213E;
+}
+
+.search-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.search-input {
+  flex: 1;
+  height: 36px;
+  padding: 0 12px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.search-placeholder {
+  color: #666;
+}
+
+.search-more {
+  font-size: 12px;
+  color: #FFD700;
+  margin-left: 8px;
+  padding: 4px 8px;
+  background-color: rgba(255, 215, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* 排序栏 */
+.sort-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #16213E;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sort-tag {
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  color: #B0B0B0;
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.sort-tag.active {
+  background-color: #FFD700;
+  color: #1A1A2E;
+  font-weight: 500;
+}
+
+/* 股票列表 */
+.stock-list {
+  padding: 12px;
+}
+
+.stock-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background-color: #16213E;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.stock-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stock-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.stock-code {
+  font-size: 12px;
+  color: #666;
+}
+
+.stock-data {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 16px;
+}
+
+.stock-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.stock-change {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.stock-change.up {
+  color: #E53935;
+}
+
+.stock-change.down {
+  color: #43A047;
+}
+
+.stock-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.remove-btn {
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.remove-btn:active {
+  background-color: rgba(229, 57, 53, 0.2);
+  color: #E53935;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #B0B0B0;
+}

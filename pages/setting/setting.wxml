@@ -1,0 +1,101 @@
+<!--设置页面-->
+<view class="container safe-area-bottom">
+  <!--推送设置-->
+  <view class="section">
+    <view class="section-title">推送设置</view>
+    <view class="setting-item card">
+      <view class="setting-label">开启推送</view>
+      <switch 
+        checked="{{settings.pushEnabled}}" 
+        bindchange="onPushToggle"
+        color="#FFD700"
+      />
+    </view>
+    <view class="setting-item card">
+      <view class="setting-label">推送频率</view>
+      <view class="setting-options">
+        <view 
+          class="option {{settings.pushFrequency === 'realtime' ? 'active' : ''}}"
+          bindtap="onFrequencyChange"
+          data-frequency="realtime"
+        >实时</view>
+        <view 
+          class="option {{settings.pushFrequency === 'morning' ? 'active' : ''}}"
+          bindtap="onFrequencyChange"
+          data-frequency="morning"
+        >早盘</view>
+        <view 
+          class="option {{settings.pushFrequency === 'evening' ? 'active' : ''}}"
+          bindtap="onFrequencyChange"
+          data-frequency="evening"
+        >收盘</view>
+      </view>
+    </view>
+  </view>
+
+  <!--显示设置-->
+  <view class="section">
+    <view class="section-title">显示设置</view>
+    <view class="setting-item card">
+      <view class="setting-label">默认排序</view>
+      <view class="setting-options">
+        <view 
+          class="option {{settings.defaultSortBy === 'changePct' ? 'active' : ''}}"
+          bindtap="onDefaultSortChange"
+          data-sort="changePct"
+        >涨跌幅</view>
+        <view 
+          class="option {{settings.defaultSortBy === 'marketCap' ? 'active' : ''}}"
+          bindtap="onDefaultSortChange"
+          data-sort="marketCap"
+        >市值</view>
+        <view 
+          class="option {{settings.defaultSortBy === 'volume' ? 'active' : ''}}"
+          bindtap="onDefaultSortChange"
+          data-sort="volume"
+        >成交量</view>
+      </view>
+    </view>
+    <view class="setting-item card">
+      <view class="setting-label">主题</view>
+      <view class="setting-options">
+        <view 
+          class="option {{settings.theme === 'dark' ? 'active' : ''}}"
+          bindtap="onThemeChange"
+          data-theme="dark"
+        >深色</view>
+        <view 
+          class="option {{settings.theme === 'light' ? 'active' : ''}}"
+          bindtap="onThemeChange"
+          data-theme="light"
+        >浅色</view>
+      </view>
+    </view>
+  </view>
+
+  <!--数据管理-->
+  <view class="section">
+    <view class="section-title">数据管理</view>
+    <view class="setting-item card" bindtap="onClearCache">
+      <view class="setting-label">清除缓存</view>
+      <view class="setting-arrow">></view>
+    </view>
+    <view class="setting-item card" bindtap="onExportData">
+      <view class="setting-label">导出数据</view>
+      <view class="setting-arrow">></view>
+    </view>
+  </view>
+
+  <!--关于-->
+  <view class="section">
+    <view class="section-title">关于</view>
+    <view class="setting-item card" bindtap="onAbout">
+      <view class="setting-label">关于 A股探子</view>
+      <view class="setting-arrow">v{{version}}</view>
+    </view>
+    <view class="setting-item card" bindtap="goToDebug">
+      <view class="setting-label">🔧 API调试面板</view>
+      <view class="setting-arrow">></view>
+    </view>
+  </view>
+</view>

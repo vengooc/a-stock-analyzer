@@ -1,0 +1,106 @@
+<view class="container">
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索股票名称/代码" 
+        value="{{searchKey}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+      />
+      <text wx:if="{{searchKey}}" class="search-clear" bindtap="clearSearch">✕</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+    <text>搜索中...</text>
+  </view>
+
+  <view wx:elif="{{showSearch && searchResults.length === 0}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-text">未找到相关股票</text>
+    <text class="empty-hint">请尝试其他关键词</text>
+  </view>
+
+  <view wx:if="{{showSearch && searchResults.length > 0}}" class="section">
+    <view class="section-header">
+      <text class="section-title">搜索结果</text>
+    </view>
+    <view class="stock-list">
+      <view 
+        wx:for="{{searchResults}}" 
+        wx:key="code" 
+        class="stock-item card card-hover"
+        bindtap="onStockTap"
+        data-code="{{item.code}}"
+        data-name="{{item.name}}"
+      >
+        <view class="stock-info">
+          <view class="stock-name-wrap">
+            <text class="stock-name">{{item.name}}</text>
+            <text class="stock-code">{{item.code}}</text>
+          </view>
+          <text class="stock-market" wx:if="{{item.market}}">{{item.market}}</text>
+        </view>
+        <view class="stock-price">
+          <text class="stock-price-val">{{item.lastPrice}}</text>
+          <text class="stock-change {{item.changePct > 0 ? 'up' : (item.changePct < 0 ? 'down' : '')}}">
+            {{item.changePctFmt}}
+          </text>
+        </view>
+        <view 
+          class="stock-watch {{item.watched ? 'active' : ''}}"
+          bindtap="onToggleWatch"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >
+          {{item.watched ? '★' : '☆'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!showSearch}}" class="section">
+    <view class="section-header">
+      <text class="section-title">🔥 热门股票</text>
+    </view>
+    <view class="stock-list">
+      <view 
+        wx:for="{{hotStocks}}" 
+        wx:key="code" 
+        class="stock-item card card-hover"
+        bindtap="onStockTap"
+        data-code="{{item.code}}"
+        data-name="{{item.name}}"
+      >
+        <view class="stock-info">
+          <view class="stock-name-wrap">
+            <text class="stock-name">{{item.name}}</text>
+            <text class="stock-code">{{item.code}}</text>
+          </view>
+        </view>
+        <view class="stock-price">
+          <text class="stock-price-val">{{item.lastPrice}}</text>
+          <text class="stock-change {{item.changePct > 0 ? 'up' : (item.changePct < 0 ? 'down' : '')}}">
+            {{item.changePctFmt}}
+          </text>
+        </view>
+        <view 
+          class="stock-watch {{item.watched ? 'active' : ''}}"
+          bindtap="onToggleWatch"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >
+          {{item.watched ? '★' : '☆'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!showSearch && hotStocks.length === 0}}" class="empty-state">
+    <text class="empty-icon">📊</text>
+    <text class="empty-text">暂无热门股票数据</text>
+  </view>
+</view>

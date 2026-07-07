@@ -1,0 +1,71 @@
+<!--事件详情页-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <view wx:else class="content">
+    <!--事件头部-->
+    <view class="event-header card">
+      <view class="event-type-wrap">
+        <view class="event-type tag">{{event.type}}</view>
+        <view class="event-sentiment sentiment-{{event.sentimentLevel}}">
+          {{event.sentimentLevel}}级利好
+        </view>
+      </view>
+      <view class="event-title">{{event.title}}</view>
+      <view class="event-meta">
+        <text>{{event.source}}</text>
+        <text class="meta-divider">|</text>
+        <text>{{event.time}}</text>
+      </view>
+    </view>
+
+    <!--事件摘要-->
+    <view class="section">
+      <view class="section-title">📰 事件摘要</view>
+      <view class="event-summary card">{{event.summary}}</view>
+    </view>
+
+    <!--关联标的-->
+    <view class="section">
+      <view class="section-title">🔗 关联标的</view>
+      <view class="stock-list">
+        <view 
+          wx:for="{{relatedStocks}}" 
+          wx:key="code"
+          class="stock-item card"
+        >
+          <view class="stock-info" bindtap="onStockTap" data-code="{{item.code}}" data-name="{{item.name}}">
+            <view class="stock-name">{{item.name}}</view>
+            <view class="stock-code">{{item.code}}</view>
+          </view>
+          <view class="stock-change {{item.changePct > 0 ? 'up' : 'down'}}">
+            {{item.changePctFmt}}
+          </view>
+          <view class="stock-relevance tag {{item.relevance === '强' ? 'relevance-high' : item.relevance === '中' ? 'relevance-mid' : 'relevance-low'}}">
+            {{item.relevance}}
+          </view>
+          <view 
+            class="stock-watch {{watchedMap[item.code] ? 'active' : ''}}"
+            bindtap="onAddWatch"
+            data-code="{{item.code}}"
+            data-name="{{item.name}}"
+          >{{watchedMap[item.code] ? '★' : '☆'}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!--关联板块-->
+    <view class="section" wx:if="{{event.relatedBoards.length > 0}}">
+      <view class="section-title">📊 关联板块</view>
+      <view class="board-tags">
+        <view 
+          wx:for="{{event.relatedBoards}}" 
+          wx:key="*this"
+          class="board-tag tag"
+        >{{item}}</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,458 @@
+/* pages/stock-detail/stock-detail.wxss */
+
+.container {
+  padding: 12px;
+  padding-bottom: 60px;
+}
+
+/* ========== 加载/错误状态 ========== */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  color: #B0B0B0;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 215, 0, 0.2);
+  border-top-color: #FFD700;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-block {
+  text-align: center;
+  padding: 60px 0;
+  color: #B0B0B0;
+  font-size: 13px;
+}
+
+.error-block {
+  background: rgba(229, 57, 53, 0.1);
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  color: #E53935;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.error-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.error-detail {
+  font-size: 12px;
+  color: #B0B0B0;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+/* ========== 顶部行情卡片 ========== */
+.quote-card {
+  background: linear-gradient(135deg, #16213E 0%, #1a2a4a 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-top: 3px solid #9E9E9E;
+}
+
+.quote-card.up { border-top-color: #E53935; }
+.quote-card.down { border-top-color: #43A047; }
+
+.quote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.quote-name-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.quote-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.quote-code {
+  font-size: 12px;
+  color: #B0B0B0;
+  font-family: 'Courier New', monospace;
+}
+
+.quote-watch {
+  font-size: 28px;
+  color: #B0B0B0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.quote-watch.active {
+  color: #FFD700;
+}
+
+.quote-watch:active {
+  transform: scale(1.2);
+}
+
+.quote-price-row {
+  margin: 12px 0 16px;
+}
+
+.quote-price {
+  font-size: 36px;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-family: 'Courier New', monospace;
+  margin-right: 12px;
+}
+
+.quote-card.up .quote-price { color: #E53935; }
+.quote-card.down .quote-price { color: #43A047; }
+
+.quote-change {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.quote-card.up .quote-change { color: #E53935; }
+.quote-card.down .quote-change { color: #43A047; }
+
+.quote-info-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.quote-info-item {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+}
+
+.info-label {
+  display: block;
+  font-size: 11px;
+  color: #B0B0B0;
+  margin-bottom: 2px;
+}
+
+.info-val {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  font-family: 'Courier New', monospace;
+}
+
+.info-val.up { color: #E53935; }
+.info-val.down { color: #43A047; }
+
+/* ========== Tab Bar ========== */
+.tab-bar {
+  display: flex;
+  background: #16213E;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 12px;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #B0B0B0;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.tab-item.active {
+  background: #FFD700;
+  color: #1A1A2E;
+  font-weight: 600;
+}
+
+/* ========== Section ========== */
+.section {
+  background: #16213E;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+/* ========== K线 ========== */
+.kline-period {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.period-tag {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #B0B0B0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.period-tag.active {
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.kline-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  background: #0F1A2F;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.kline-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.kline-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #9E9E9E;
+  font-size: 12px;
+}
+
+.kline-table {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.kline-table-header,
+.kline-table-row {
+  display: flex;
+  padding: 8px 4px;
+  font-size: 12px;
+}
+
+.kline-table-header {
+  background: rgba(255, 215, 0, 0.08);
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.kline-table-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: #FFFFFF;
+  font-family: 'Courier New', monospace;
+}
+
+.kline-table-row:last-child { border-bottom: none; }
+
+.kcell {
+  flex: 1;
+  text-align: center;
+}
+
+.kcell:first-child { text-align: left; }
+.kcell:last-child { text-align: right; font-weight: 600; }
+
+.kcell.up { color: #E53935; }
+.kcell.down { color: #43A047; }
+
+/* ========== 资金流向 ========== */
+.flow-content {
+  padding: 8px 0;
+}
+
+.flow-main {
+  text-align: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.flow-main-label {
+  font-size: 12px;
+  color: #B0B0B0;
+  margin-bottom: 4px;
+}
+
+.flow-main-value {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.flow-main-value.up { color: #E53935; }
+.flow-main-value.down { color: #43A047; }
+
+.flow-main-pct {
+  font-size: 12px;
+  color: #B0B0B0;
+  margin-top: 4px;
+}
+
+.flow-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flow-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.flow-bar-label {
+  width: 50px;
+  color: #B0B0B0;
+}
+
+.flow-bar-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.flow-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.flow-bar-fill.up { background: #E53935; }
+.flow-bar-fill.down { background: #43A047; }
+.flow-bar-fill.neutral { background: #9E9E9E; }
+
+.flow-bar-val {
+  width: 50px;
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  color: #FFFFFF;
+}
+
+.flow-note {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 11px;
+  color: #B0B0B0;
+  opacity: 0.7;
+}
+
+/* ========== 公告 ========== */
+.ann-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ann-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 10px 12px;
+  border-left: 3px solid #FFD700;
+}
+
+.ann-time {
+  font-size: 11px;
+  color: #B0B0B0;
+  margin-bottom: 4px;
+}
+
+.ann-title {
+  font-size: 13px;
+  color: #FFFFFF;
+  line-height: 1.4;
+}
+
+.ann-cols {
+  font-size: 11px;
+  color: #FFD700;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+/* ========== 详情卡片 ========== */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.info-card-label {
+  display: block;
+  font-size: 11px;
+  color: #B0B0B0;
+  margin-bottom: 4px;
+}
+
+.info-card-val {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  font-family: 'Courier New', monospace;
+}
+
+.info-card-val.up { color: #E53935; }
+.info-card-val.down { color: #43A047; }
+
+/* ========== 颜色 ========== */
+.up { color: #E53935; }
+.down { color: #43A047; }
+.neutral { color: #9E9E9E; }

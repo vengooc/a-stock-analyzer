@@ -1,0 +1,77 @@
+<!--自选股页面-->
+<view class="container">
+  <!--搜索栏-->
+  <view class="search-bar">
+    <text class="search-icon">🔍</text>
+    <input 
+      class="search-input" 
+      placeholder="搜索自选股..." 
+      placeholder-class="search-placeholder"
+      value="{{searchKey}}"
+      bindinput="onSearchInput"
+      bindconfirm="onSearch"
+    />
+    <view class="search-more" bindtap="goToStockSearch">搜索更多</view>
+  </view>
+
+  <!--排序栏-->
+  <view class="sort-bar">
+    <view 
+      class="sort-tag {{sortBy === 'addTime' ? 'active' : ''}}"
+      bindtap="onSortChange"
+      data-sort="addTime"
+    >添加时间</view>
+    <view 
+      class="sort-tag {{sortBy === 'changePct' ? 'active' : ''}}"
+      bindtap="onSortChange"
+      data-sort="changePct"
+    >涨跌幅</view>
+    <view 
+      class="sort-tag {{sortBy === 'marketCap' ? 'active' : ''}}"
+      bindtap="onSortChange"
+      data-sort="marketCap"
+    >市值</view>
+  </view>
+
+  <!--加载状态-->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <!--自选股列表-->
+  <view wx:else class="stock-list">
+    <view 
+      wx:for="{{watchStocks}}" 
+      wx:key="code"
+      class="stock-item card"
+    >
+      <view class="stock-info" bindtap="onStockTap" data-code="{{item.code}}" data-name="{{item.name}}">
+        <view class="stock-name">{{item.name}}</view>
+        <view class="stock-code">{{item.code}}</view>
+      </view>
+      
+      <view class="stock-data">
+        <view class="stock-price">{{item.lastPrice}}</view>
+        <view class="stock-change {{item.changePct > 0 ? 'up' : 'down'}}">
+          {{item.changePctFmt}}
+        </view>
+      </view>
+      
+      <view class="stock-actions">
+        <view 
+          class="action-btn remove-btn"
+          catchtap="onRemoveWatch"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >✕</view>
+      </view>
+    </view>
+  </view>
+
+  <!--空状态-->
+  <view wx:if="{{!loading && watchStocks.length === 0}}" class="empty-state">
+    <view class="empty-icon">⭐</view>
+    <view class="empty-title">暂无自选股</view>
+    <view class="empty-text">从板块或事件中添加关注的股票</view>
+  </view>
+</view>

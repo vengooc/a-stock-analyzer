@@ -1,0 +1,74 @@
+<!--热点事件页-->
+<view class="container">
+  <!--筛选栏-->
+  <view class="filter-bar">
+    <view 
+      class="filter-tag {{currentType === 'all' ? 'active' : ''}}"
+      bindtap="onTypeChange"
+      data-type="all"
+    >全部</view>
+    <view 
+      class="filter-tag {{currentType === 'policy' ? 'active' : ''}}"
+      bindtap="onTypeChange"
+      data-type="policy"
+    >政策</view>
+    <view 
+      class="filter-tag {{currentType === 'finance' ? 'active' : ''}}"
+      bindtap="onTypeChange"
+      data-type="finance"
+    >财报</view>
+    <view 
+      class="filter-tag {{currentType === 'tech' ? 'active' : ''}}"
+      bindtap="onTypeChange"
+      data-type="tech"
+    >技术</view>
+    <view 
+      class="filter-tag {{currentType === 'order' ? 'active' : ''}}"
+      bindtap="onTypeChange"
+      data-type="order"
+    >订单</view>
+  </view>
+
+  <!--加载状态-->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <!--事件列表-->
+  <view wx:else class="event-list">
+    <view 
+      wx:for="{{events}}" 
+      wx:key="id"
+      class="event-item card card-hover"
+      bindtap="goToEventDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="event-header">
+        <view class="event-type tag">{{item.type}}</view>
+        <view class="event-sentiment {{item.sentimentLevel === 'A' ? 'sentiment-a' : item.sentimentLevel === 'B' ? 'sentiment-b' : 'sentiment-c'}}">
+          {{item.sentimentLevel}}级
+        </view>
+      </view>
+      
+      <view class="event-title">{{item.title}}</view>
+      
+      <view class="event-summary ellipsis-2">{{item.summary}}</view>
+      
+      <view class="event-footer">
+        <view class="event-source-wrap">
+          <view class="event-source">{{item.source || '未知来源'}}</view>
+          <view class="event-time">{{formatTime(item.time, 'relative')}}</view>
+        </view>
+        <view class="event-stocks" wx:if="{{item.relatedStocks.length > 0}}">
+          <text>{{item.relatedStocks.length}}只关联股</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!--空状态-->
+  <view wx:if="{{!loading && events.length === 0}}" class="empty-state">
+    <view class="empty-icon">📰</view>
+    <view class="empty-text">暂无热点事件</view>
+  </view>
+</view>

@@ -1,0 +1,502 @@
+<!--pages/debug/debug.wxml - API调试页-->
+<wxs src="./format.wxs" module="fmt" />
+<view class="container">
+  <!--顶部说明-->
+  <view class="header">
+    <view class="header-title">🛠 API 调试面板</view>
+    <view class="header-desc">测试 utils/api.js 中的所有接口</view>
+    <view class="header-actions">
+      <button class="btn btn-primary btn-sm" bindtap="runAllTests">🔄 一键全测</button>
+    </view>
+  </view>
+
+  <!-- ========== 1. 主要指数 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="mainIndices">
+      <view class="test-title">
+        <text class="test-icon">📈</text>
+        <text class="test-name">1. 主要指数</text>
+        <text class="test-method">getMainIndices()</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.mainIndices}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.mainIndices.success}}" class="status-ok">✓ {{loadTime.mainIndices}}ms</text>
+        <text wx:elif="{{results.mainIndices}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.mainIndices ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{results.mainIndices.data}}" class="test-content">
+      <view class="data-list">
+        <view wx:for="{{results.mainIndices.data}}" wx:key="code" class="data-row">
+          <text class="data-name">{{item.name}}</text>
+          <text class="data-num">{{item.lastPrice}}</text>
+          <text class="data-pct {{fmt.pctClass(item.changePct)}}">
+            {{fmt.fmtPct(item.changePct)}}%
+          </text>
+        </view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="mainIndices">📋 复制JSON</button>
+        <button class="btn btn-ghost btn-sm" bindtap="testMainIndices">🔄 重测</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 2. 涨停股 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="limitUp">
+      <view class="test-title">
+        <text class="test-icon">🚀</text>
+        <text class="test-name">2. 涨停股 TOP10</text>
+        <text class="test-method">getLimitUpStocks(10)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.limitUp}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.limitUp.success}}" class="status-ok">✓ {{results.limitUp.data.length}}只 {{loadTime.limitUp}}ms</text>
+        <text wx:elif="{{results.limitUp}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.limitUp ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{results.limitUp.data && results.limitUp.data.length > 0}}" class="test-content">
+      <view class="data-list">
+        <block wx:for="{{results.limitUp.data}}" wx:key="code">
+        <view wx:if="{{index < 5}}" class="data-row">
+          <text class="data-code">{{item.code}}</text>
+          <text class="data-name ellipsis">{{item.name}}</text>
+          <text class="data-num">{{item.lastPrice}}</text>
+          <text class="data-pct up">+{{item.changePct}}%</text>
+        </view>
+        </block>
+      </view>
+      <view wx:if="{{results.limitUp.data.length > 5}}" class="more-hint">
+        还有 {{results.limitUp.data.length - 5}} 只...
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="limitUp">📋 复制JSON</button>
+        <button class="btn btn-ghost btn-sm" bindtap="testLimitUp">🔄 重测</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 3. 概念板块 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="conceptBoards">
+      <view class="test-title">
+        <text class="test-icon">📊</text>
+        <text class="test-name">3. 概念板块 TOP5</text>
+        <text class="test-method">getConceptBoards(5)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.conceptBoards}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.conceptBoards.success}}" class="status-ok">✓ {{results.conceptBoards.data.length}}个 {{loadTime.conceptBoards}}ms</text>
+        <text wx:elif="{{results.conceptBoards}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.conceptBoards ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{results.conceptBoards.data && results.conceptBoards.data.length > 0}}" class="test-content">
+      <view class="data-list">
+        <view wx:for="{{results.conceptBoards.data}}" wx:key="code" class="data-row">
+          <text class="data-rank rank-{{index+1 <= 3 ? index+1 : 'other'}}">{{index+1}}</text>
+          <view class="data-info">
+            <text class="data-name">{{item.name}}</text>
+            <text class="data-meta">龙头: {{item.leaderName}}</text>
+          </view>
+          <text class="data-pct {{fmt.pctClass(item.changePct)}}">
+            {{fmt.fmtPct(item.changePct)}}%
+          </text>
+        </view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="conceptBoards">📋 复制JSON</button>
+        <button class="btn btn-ghost btn-sm" bindtap="testConceptBoards">🔄 重测</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 4. 单股行情 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="quote">
+      <view class="test-title">
+        <text class="test-icon">🔍</text>
+        <text class="test-name">4. 单股行情</text>
+        <text class="test-method">getQuote(code)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.quote}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.quote.success}}" class="status-ok">✓ {{loadTime.quote}}ms</text>
+        <text wx:elif="{{results.quote}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.quote ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view class="test-input">
+      <input 
+        class="input" 
+        placeholder="股票代码 如 600519" 
+        value="{{stockCode}}"
+        data-field="stockCode"
+        bindinput="onInput"
+        bindconfirm="testQuote"
+      />
+      <button class="btn btn-primary btn-sm" bindtap="testQuote">测试</button>
+    </view>
+    <view wx:if="{{results.quote.data}}" class="test-content">
+      <view class="quote-detail">
+        <view class="quote-row">
+          <text class="quote-label">名称</text>
+          <text class="quote-val">{{results.quote.data.name}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">最新价</text>
+          <text class="quote-val highlight">{{results.quote.data.lastPrice}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">涨跌幅</text>
+          <text class="quote-val {{results.quote.data.changePct > 0 ? 'up' : 'down'}}">{{fmt.fmtPct(results.quote.data.changePct)}}%</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">涨跌额</text>
+          <text class="quote-val">{{results.quote.data.changeAmount}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">成交量</text>
+          <text class="quote-val">{{results.quote.data.volume}}手</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">成交额</text>
+          <text class="quote-val">{{fmt.fmtAmount(results.quote.data.amount)}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">换手率</text>
+          <text class="quote-val">{{results.quote.data.turnoverRate}}%</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">量比</text>
+          <text class="quote-val">{{results.quote.data.quantityRatio}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">PE(动)</text>
+          <text class="quote-val">{{results.quote.data.peDynamic}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">PE(TTM)</text>
+          <text class="quote-val">{{results.quote.data.peTTM}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">总市值</text>
+          <text class="quote-val">{{fmt.fmtAmount(results.quote.data.marketCap)}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">涨停价</text>
+          <text class="quote-val up">{{results.quote.data.upperLimit}}</text>
+        </view>
+        <view class="quote-row">
+          <text class="quote-label">跌停价</text>
+          <text class="quote-val down">{{results.quote.data.lowerLimit}}</text>
+        </view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="quote">📋 复制JSON</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 5. 批量行情 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="quotes">
+      <view class="test-title">
+        <text class="test-icon">📋</text>
+        <text class="test-name">5. 批量行情</text>
+        <text class="test-method">getQuotes(codes)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.quotes}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.quotes.success}}" class="status-ok">✓ {{results.quotes.data.length}}只 {{loadTime.quotes}}ms</text>
+        <text wx:elif="{{results.quotes}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.quotes ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view class="test-input">
+      <input 
+        class="input" 
+        placeholder="多个代码 逗号分隔" 
+        value="{{batchCodes}}"
+        data-field="batchCodes"
+        bindinput="onInput"
+        bindconfirm="testQuotes"
+      />
+      <button class="btn btn-primary btn-sm" bindtap="testQuotes">测试</button>
+    </view>
+    <view wx:if="{{results.quotes.data && results.quotes.data.length > 0}}" class="test-content">
+      <view class="data-list">
+        <view wx:for="{{results.quotes.data}}" wx:key="code" class="data-row">
+          <text class="data-code">{{item.code}}</text>
+          <text class="data-name ellipsis">{{item.name}}</text>
+          <text class="data-num">{{item.lastPrice}}</text>
+          <text class="data-pct {{fmt.pctClass(item.changePct)}}">
+            {{fmt.fmtPct(item.changePct)}}%
+          </text>
+        </view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="quotes">📋 复制JSON</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 6. 板块详情 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="boardDetail">
+      <view class="test-title">
+        <text class="test-icon">🏷</text>
+        <text class="test-name">6. 板块详情 + 成分股</text>
+        <text class="test-method">getBoardDetail(code)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.boardDetail}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.boardDetail.success}}" class="status-ok">✓ {{loadTime.boardDetail}}ms</text>
+        <text wx:elif="{{results.boardDetail}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.boardDetail ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view class="test-input">
+      <input 
+        class="input" 
+        placeholder="板块代码 如 BK1596" 
+        value="{{boardCode}}"
+        data-field="boardCode"
+        bindinput="onInput"
+        bindconfirm="testBoardDetail"
+      />
+      <button class="btn btn-primary btn-sm" bindtap="testBoardDetail">测试</button>
+    </view>
+    <view wx:if="{{results.boardDetail.data && results.boardDetail.data.board}}" class="test-content">
+      <view class="board-header">
+        <text class="board-name">{{results.boardDetail.data.board.name}}</text>
+        <text class="data-pct {{results.boardDetail.data.board.changePct > 0 ? 'up' : 'down'}}">
+          {{fmt.fmtPct(results.boardDetail.data.board.changePct)}}%
+        </text>
+        <text class="data-meta ml-8">成分股 {{results.boardDetail.data.totalCount || '--'}} 只</text>
+      </view>
+      <view class="data-list">
+        <block wx:for="{{results.boardDetail.data.stocks}}" wx:key="code">
+        <view wx:if="{{index < 5}}" class="data-row">
+          <text class="data-code">{{item.code}}</text>
+          <text class="data-name ellipsis">{{item.name}}</text>
+          <text class="data-num">{{item.lastPrice}}</text>
+          <text class="data-pct {{fmt.pctClass(item.changePct)}}">
+            {{fmt.fmtPct(item.changePct)}}%
+          </text>
+        </view>
+        </block>
+      </view>
+      <view wx:if="{{results.boardDetail.data.stocks.length > 5}}" class="more-hint">
+        还有 {{results.boardDetail.data.stocks.length - 5}} 只成分股...
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="boardDetail">📋 复制JSON</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 7. 股票搜索 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="search">
+      <view class="test-title">
+        <text class="test-icon">🔎</text>
+        <text class="test-name">7. 股票搜索</text>
+        <text class="test-method">searchStock(kw)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.search}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.search.success}}" class="status-ok">✓ {{results.search.data.length}}条 {{loadTime.search}}ms</text>
+        <text wx:elif="{{results.search}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.search ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view class="test-input">
+      <input 
+        class="input" 
+        placeholder="代码 600519 / 名称 茅台" 
+        value="{{searchKw}}"
+        data-field="searchKw"
+        bindinput="onInput"
+        bindconfirm="testSearch"
+      />
+      <button class="btn btn-primary btn-sm" bindtap="testSearch">搜索</button>
+    </view>
+    <view wx:if="{{results.search && !loading.search}}" class="search-hint">
+      <text wx:if="{{results.search.data && results.search.data.length === 0}}">⚠️ 未找到。试试 6 位代码（600519）或常用名称（茅台/平安/宁德）</text>
+      <text wx:elif="{{results.search.data && results.search.data.length > 0}}">✓ 找到 {{results.search.data.length}} 条结果</text>
+    </view>
+    <view wx:if="{{results.search.data && results.search.data.length > 0}}" class="test-content">
+      <view class="data-list">
+        <block wx:for="{{results.search.data}}" wx:key="code">
+        <view wx:if="{{index < 8}}" class="data-row">
+          <text class="data-code">{{item.code}}</text>
+          <text class="data-name ellipsis">{{item.name}}</text>
+          <text wx:if="{{item.market}}" class="data-meta" style="font-size:10px; padding:1px 4px; background:rgba(255,215,0,0.1); color:#FFD700; border-radius:3px;">{{item.market}}</text>
+          <text class="data-num">{{item.lastPrice}}</text>
+          <text class="data-pct {{fmt.pctClass(item.changePct)}}">
+            {{fmt.fmtPct(item.changePct)}}%
+          </text>
+        </view>
+        </block>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="search">📋 复制JSON</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 8. K线 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="kline">
+      <view class="test-title">
+        <text class="test-icon">📉</text>
+        <text class="test-name">8. K线数据</text>
+        <text class="test-method">getKLine(code, type, n)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.kline}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.kline.success}}" class="status-ok">✓ {{results.kline.data.length}}根 {{loadTime.kline}}ms</text>
+        <text wx:elif="{{results.kline}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.kline ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view class="test-input">
+      <input 
+        class="input input-flex" 
+        placeholder="股票代码" 
+        value="{{klineCode}}"
+        data-field="klineCode"
+        bindinput="onInput"
+      />
+      <picker mode="selector" range="{{klineLabels}}" value="{{klineTypeIndex}}"
+              bindchange="onKLineTypeChange">
+        <view class="picker">{{klineTypeLabel}}</view>
+      </picker>
+      <button class="btn btn-primary btn-sm" bindtap="testKLine">测试</button>
+    </view>
+    <view wx:if="{{results.kline.data && results.kline.data.length > 0}}" class="test-content">
+      <view class="kline-table">
+        <view class="kline-header">
+          <text class="k-cell">日期</text>
+          <text class="k-cell">开</text>
+          <text class="k-cell">收</text>
+          <text class="k-cell">高</text>
+          <text class="k-cell">低</text>
+          <text class="k-cell">涨跌幅</text>
+        </view>
+        <view wx:for="{{results.kline.data}}" wx:key="date" class="kline-row">
+          <text class="k-cell">{{item.date}}</text>
+          <text class="k-cell">{{item.open}}</text>
+          <text class="k-cell">{{item.close}}</text>
+          <text class="k-cell">{{item.high}}</text>
+          <text class="k-cell">{{item.low}}</text>
+          <text class="k-cell {{item.changePct > 0 ? 'up' : 'down'}}">{{fmt.fmtPct(item.changePct)}}%</text>
+        </view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="kline">📋 复制JSON</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 9. 资金流向 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="capitalFlow">
+      <view class="test-title">
+        <text class="test-icon">💰</text>
+        <text class="test-name">9. 资金流向</text>
+        <text class="test-method">getCapitalFlow(code)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.capitalFlow}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.capitalFlow.success}}" class="status-ok">✓ {{loadTime.capitalFlow}}ms</text>
+        <text wx:elif="{{results.capitalFlow}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.capitalFlow ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{results.capitalFlow.data && results.capitalFlow.data.today}}" class="test-content">
+      <view class="capital-flow">
+        <view class="cf-main">
+          <text class="cf-label">主力净流入</text>
+          <text class="cf-value {{results.capitalFlow.data.today.mainNetInflow > 0 ? 'up' : 'down'}}">
+            {{results.capitalFlow.data.today.mainNetInflow}} 亿
+          </text>
+        </view>
+        <view class="cf-bars">
+          <view class="cf-bar">
+            <text class="cf-bar-label">特大单</text>
+            <view class="cf-bar-track">
+              <view class="cf-bar-fill up" style="width: {{results.capitalFlow.data.today.superLargePct}}%"></view>
+            </view>
+            <text class="cf-bar-val">{{results.capitalFlow.data.today.superLargePct}}%</text>
+          </view>
+          <view class="cf-bar">
+            <text class="cf-bar-label">大单</text>
+            <view class="cf-bar-track">
+              <view class="cf-bar-fill up" style="width: {{results.capitalFlow.data.today.largePct}}%"></view>
+            </view>
+            <text class="cf-bar-val">{{results.capitalFlow.data.today.largePct}}%</text>
+          </view>
+          <view class="cf-bar">
+            <text class="cf-bar-label">中单</text>
+            <view class="cf-bar-track">
+              <view class="cf-bar-fill neutral" style="width: {{results.capitalFlow.data.today.mediumPct}}%"></view>
+            </view>
+            <text class="cf-bar-val">{{results.capitalFlow.data.today.mediumPct}}%</text>
+          </view>
+          <view class="cf-bar">
+            <text class="cf-bar-label">小单</text>
+            <view class="cf-bar-track">
+              <view class="cf-bar-fill down" style="width: {{fmt.abs(results.capitalFlow.data.today.smallPct)}}%"></view>
+            </view>
+            <text class="cf-bar-val">{{results.capitalFlow.data.today.smallPct}}%</text>
+          </view>
+        </view>
+        <view class="cf-note">{{results.capitalFlow.data.note}}</view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="capitalFlow">📋 复制JSON</button>
+        <button class="btn btn-ghost btn-sm" bindtap="testCapitalFlow">🔄 重测</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 10. 个股公告 ========== -->
+  <view class="card test-card">
+    <view class="test-header" bindtap="toggleDetail" data-key="announcements">
+      <view class="test-title">
+        <text class="test-icon">📰</text>
+        <text class="test-name">10. 个股公告</text>
+        <text class="test-method">getStockAnnouncements(code)</text>
+      </view>
+      <view class="test-status">
+        <view wx:if="{{loading.announcements}}" class="loading-spinner-sm"></view>
+        <text wx:elif="{{results.announcements.success}}" class="status-ok">✓ {{results.announcements.data.length}}条 {{loadTime.announcements}}ms</text>
+        <text wx:elif="{{results.announcements}}" class="status-fail">✗</text>
+        <text class="status-arrow">{{showDetail.announcements ? '▼' : '▶'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{results.announcements.data && results.announcements.data.length > 0}}" class="test-content">
+      <view class="ann-list">
+        <view wx:for="{{results.announcements.data}}" wx:key="id" class="ann-item">
+          <view class="ann-time">{{item.time}}</view>
+          <view class="ann-title">{{item.title}}</view>
+          <view wx:if="{{item.columns}}" class="ann-cols">📑 {{item.columns}}</view>
+        </view>
+      </view>
+      <view class="test-actions">
+        <button class="btn btn-ghost btn-sm" bindtap="copyResult" data-key="announcements">📋 复制JSON</button>
+        <button class="btn btn-ghost btn-sm" bindtap="testAnnouncements">🔄 重测</button>
+      </view>
+    </view>
+  </view>
+
+  <!--底部说明-->
+  <view class="footer">
+    <text class="footer-text">🔍 所有接口来自 utils/api.js</text>
+    <text class="footer-text">📊 数据源：东方财富 push2.eastmoney.com</text>
+  </view>
+</view>

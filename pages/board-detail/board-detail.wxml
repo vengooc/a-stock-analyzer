@@ -1,0 +1,100 @@
+<!--板块详情页-->
+<view class="container">
+  <!--加载状态-->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+    <text style="color:#B0B0B0; font-size:12px; margin-top:8px;">加载中...</text>
+  </view>
+
+  <!--错误状态-->
+  <view wx:elif="{{error}}" class="error-state">
+    <text class="error-icon">⚠️</text>
+    <text class="error-msg">加载失败</text>
+    <text class="error-detail">{{error}}</text>
+    <button class="btn-retry" bindtap="retryLoad">重试</button>
+  </view>
+
+  <!--内容区-->
+  <view wx:else class="content">
+    <!--板块概览-->
+    <view class="board-overview card">
+      <view class="overview-header">
+        <view class="overview-name">{{board.name || name}}</view>
+        <view class="overview-change {{board.changePct > 0 ? 'up' : 'down'}}">
+          {{board.changePctFmt}}
+        </view>
+      </view>
+      <view class="overview-stats">
+        <view class="stat-item">
+          <text class="stat-value">{{board.stockCount}}</text>
+          <text class="stat-label">成分股</text>
+        </view>
+        <view class="stat-item" wx:if="{{board.leaderName}}">
+          <text class="stat-value" style="font-size:14px;">{{board.leaderName}}</text>
+          <text class="stat-label">龙头股{{board.leaderChangePctFmt}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!--排序标签-->
+    <view class="sort-bar">
+      <view 
+        class="sort-tag {{sortBy === 'changePct' ? 'active' : ''}}"
+        bindtap="onSortChange"
+        data-sort="changePct"
+      >涨幅</view>
+      <view 
+        class="sort-tag {{sortBy === 'marketCap' ? 'active' : ''}}"
+        bindtap="onSortChange"
+        data-sort="marketCap"
+      >市值</view>
+      <view 
+        class="sort-tag {{sortBy === 'volume' ? 'active' : ''}}"
+        bindtap="onSortChange"
+        data-sort="volume"
+      >成交量</view>
+    </view>
+
+    <!--成分股列表-->
+    <view class="stock-list">
+      <view 
+        wx:for="{{stocks}}" 
+        wx:key="code"
+        class="stock-item card"
+      >
+        <view class="stock-rank" wx:if="{{item.isLeader}}">🏆</view>
+        <view class="stock-rank" wx:else>{{index + 1}}</view>
+        
+        <view class="stock-info" bindtap="onStockTap" data-code="{{item.code}}" data-name="{{item.name}}">
+          <view class="stock-name">{{item.name}}</view>
+          <view class="stock-code">{{item.code}}</view>
+        </view>
+        
+        <view class="stock-data">
+          <view class="stock-price">
+            <text class="price-value">{{item.priceFmt}}</text>
+          </view>
+          <view class="stock-change {{item.changePct > 0 ? 'up' : 'down'}}">
+            {{item.changePctFmt}}
+          </view>
+        </view>
+        
+        <view 
+          class="stock-watch {{watchedMap[item.code] ? 'active' : ''}}"
+          bindtap="onAddWatch"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >
+          {{watchedMap[item.code] ? '★' : '☆'}}
+        </view>
+      </view>
+    </view>
+
+    <!--空状态-->
+    <view wx:if="{{stocks.length === 0 && !loading && !error}}" class="empty-state">
+      <text class="empty-icon">📊</text>
+      <text class="empty-text">该板块暂无成分股数据</text>
+      <text class="empty-hint">code: {{code}}</text>
+    </view>
+  </view>
+</view>

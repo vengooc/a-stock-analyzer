@@ -1,0 +1,126 @@
+<!--首页 - 市场概览-->
+<view class="container">
+  <!--顶部状态栏-->
+  <view class="status-bar">
+    <view class="status-left">
+      <text class="trade-status {{tradeStatus === '交易中' ? 'active' : ''}}">{{tradeStatus}}</text>
+      <text class="current-time">{{currentTime}}</text>
+    </view>
+    <view class="status-right">
+      <text class="refresh-hint">下拉刷新</text>
+    </view>
+  </view>
+
+  <!--加载状态-->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <!--内容区-->
+  <view wx:else class="content">
+    <!--大盘指数-->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">📈 大盘指数</text>
+      </view>
+      <view class="index-list">
+        <view 
+          wx:for="{{indexData}}" 
+          wx:key="code"
+          class="index-item card-hover"
+          bindtap="goToIndexDetail"
+          data-code="{{item.code}}"
+          data-name="{{item.indexName}}"
+        >
+          <view class="index-name">{{item.indexName}}</view>
+          <view class="index-price">{{item.lastPriceFmt}}</view>
+          <view class="index-change {{item.changePct > 0 ? 'up' : 'down'}}">
+            {{item.changePctFmt}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!--热点板块-->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">🔥 今日热点</text>
+        <text class="section-more" bindtap="goToBoardList">更多></text>
+      </view>
+      <view class="hot-board-list">
+        <view 
+          wx:for="{{hotBoards}}" 
+          wx:key="code"
+          class="hot-board-item card-hover"
+          bindtap="goToBoardDetail"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >
+          <view class="board-name">{{item.name}}</view>
+          <view class="board-change {{item.changePct > 0 ? 'up' : 'down'}}">
+            {{item.changePctFmt}}
+          </view>
+          <view class="board-hot tag tag-hot" wx:if="{{item.hotLevel === 'high'}}">热</view>
+        </view>
+      </view>
+    </view>
+
+    <!--概念板块排行-->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">📊 概念板块排行</text>
+      </view>
+      <view class="board-list">
+        <view 
+          wx:for="{{boardRank}}" 
+          wx:key="code"
+          class="board-item card card-hover"
+          bindtap="goToBoardDetail"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >
+          <view class="board-rank">{{index + 1}}</view>
+          <view class="board-info">
+            <view class="board-info-name">{{item.name}}</view>
+            <view class="board-info-meta">
+              <text>龙头: {{item.leaderStock}}</text>
+              <text class="divider">|</text>
+              <text>市值 {{item.leaderCap}}亿</text>
+            </view>
+          </view>
+          <view class="board-change {{item.changePct > 0 ? 'up' : 'down'}}">
+            {{item.changePctFmt}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!--自选股快捷查看-->
+    <view class="section" wx:if="{{watchStocks.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">⭐ 自选股 ({{watchStocks.length}})</text>
+        <text class="section-more" bindtap="goToWatch">查看></text>
+      </view>
+      <view class="watch-list">
+        <view 
+          wx:for="{{watchStocks}}" 
+          wx:key="code"
+          class="watch-item"
+        >
+          <view class="watch-name">{{item.name}}</view>
+          <view class="watch-price">{{item.lastPrice}}</view>
+          <view class="watch-change change-tag {{item.changePct > 0 ? 'up' : 'down'}}">
+            {{item.changePctFmt}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!--空状态-->
+    <view wx:if="{{boardRank.length === 0}}" class="empty-state">
+      <view class="empty-state-icon">📊</view>
+      <view class="empty-state-text">暂无板块数据</view>
+      <button class="btn btn-primary mt-16" bindtap="onRefresh">刷新</button>
+    </view>
+  </view>
+</view>

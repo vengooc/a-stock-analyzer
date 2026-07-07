@@ -1,0 +1,76 @@
+<!--概念板块列表页-->
+<view class="container">
+  <!--搜索栏-->
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      placeholder="搜索概念板块..." 
+      placeholder-class="search-placeholder"
+      value="{{searchKey}}"
+      bindinput="onSearchInput"
+      bindconfirm="onSearch"
+    />
+  </view>
+
+  <!--概念/行业 切换-->
+  <view class="sort-bar">
+    <view 
+      class="sort-tag {{type === 'concept' ? 'active' : ''}}"
+      bindtap="switchType"
+      data-type="concept"
+    >概念</view>
+    <view 
+      class="sort-tag {{type === 'industry' ? 'active' : ''}}"
+      bindtap="switchType"
+      data-type="industry"
+    >行业</view>
+    <view 
+      class="sort-tag {{sortBy === 'changePct' ? 'active' : ''}}"
+      bindtap="onSortChange"
+      data-sort="changePct"
+    >涨幅</view>
+    <view 
+      class="sort-tag {{sortBy === 'stockCount' ? 'active' : ''}}"
+      bindtap="onSortChange"
+      data-sort="stockCount"
+    >成分股</view>
+  </view>
+
+  <!--加载状态-->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <!--板块列表-->
+  <view wx:else class="board-list">
+    <view 
+      wx:for="{{boards}}" 
+      wx:key="code"
+      class="board-item card card-hover"
+      bindtap="goToBoardDetail"
+      data-code="{{item.code}}"
+      data-name="{{item.name}}"
+    >
+      <view class="board-rank">{{index + 1}}</view>
+      <view class="board-info">
+        <view class="board-name">{{item.name}}</view>
+        <view class="board-meta">
+          <text class="meta-item">{{item.stockCount}}只成分股</text>
+          <text class="meta-divider" wx:if="{{item.leaderName}}">|</text>
+          <text class="meta-item" wx:if="{{item.leaderName}}">龙头 {{item.leaderName}} {{item.leaderChangePct > 0 ? '+' : ''}}{{item.leaderChangePct}}%</text>
+        </view>
+      </view>
+      <view class="board-change-wrap">
+        <view class="board-change {{item.changePct > 0 ? 'up' : 'down'}}">
+          {{item.changePctFmt}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!--空状态-->
+  <view wx:if="{{!loading && boards.length === 0}}" class="empty-state">
+    <view class="empty-icon">🔍</view>
+    <view class="empty-text">未找到相关板块</view>
+  </view>
+</view>

@@ -1,0 +1,221 @@
+<!--pages/stock-detail/stock-detail.wxml-->
+<view class="container">
+  <!--加载状态-->
+  <view wx:if="{{loading && !quote}}" class="loading-state">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <view wx:elif="{{error && !quote}}" class="error-page">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">数据加载失败</text>
+    <text class="error-detail">{{error}}</text>
+    <button class="btn btn-primary" bindtap="loadAll">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <!-- 顶部行情卡片 -->
+    <view class="quote-card {{quote.changePct > 0 ? 'up' : (quote.changePct < 0 ? 'down' : '')}}">
+      <view class="quote-header">
+        <view class="quote-name-wrap">
+          <text class="quote-name">{{quote.name || name}}</text>
+          <text class="quote-code">{{code}}</text>
+        </view>
+        <view class="quote-watch {{watched ? 'active' : ''}}" bindtap="onToggleWatch">
+          {{watched ? '★' : '☆'}}
+        </view>
+      </view>
+
+      <view class="quote-price-row">
+        <text class="quote-price">{{quote.lastPriceFmt}}</text>
+        <text class="quote-change">
+          {{quote.changeAmountFmt}} ({{quote.changePctFmt}})
+        </text>
+      </view>
+
+      <view class="quote-info-row">
+        <view class="quote-info-item">
+          <text class="info-label">今开</text>
+          <text class="info-val">{{quote.openPriceFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">昨收</text>
+          <text class="info-val">{{quote.preCloseFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">最高</text>
+          <text class="info-val up">{{quote.highPriceFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">最低</text>
+          <text class="info-val down">{{quote.lowPriceFmt}}</text>
+        </view>
+      </view>
+
+      <view class="quote-info-row">
+        <view class="quote-info-item">
+          <text class="info-label">成交量</text>
+          <text class="info-val">{{quote.volumeFmt}}手</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">成交额</text>
+          <text class="info-val">{{quote.amountFmt}}亿</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">换手率</text>
+          <text class="info-val">{{quote.turnoverRateFmt}}%</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">振幅</text>
+          <text class="info-val">{{quote.amplitudeFmt}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'kline' ? 'active' : ''}}"
+            data-tab="kline" bindtap="onTabChange">K线</view>
+      <view class="tab-item {{activeTab === 'flow' ? 'active' : ''}}"
+            data-tab="flow" bindtap="onTabChange">资金流向</view>
+      <view class="tab-item {{activeTab === 'news' ? 'active' : ''}}"
+            data-tab="news" bindtap="onTabChange">公告</view>
+      <view class="tab-item {{activeTab === 'info' ? 'active' : ''}}"
+            data-tab="info" bindtap="onTabChange">详情</view>
+    </view>
+
+    <!-- K线 Tab -->
+    <view wx:if="{{activeTab === 'kline'}}" class="section">
+      <view class="kline-period">
+        <view wx:for="{{klineTypes}}" wx:key="value"
+              class="period-tag {{klineType === item.value ? 'active' : ''}}"
+              data-value="{{item.value}}"
+              bindtap="onKLineTypeChange">
+          {{item.label}}
+        </view>
+      </view>
+      <view class="kline-canvas-wrap">
+        <canvas type="2d" id="klineCanvas" class="kline-canvas"></canvas>
+        <view wx:if="{{klineList.length === 0}}" class="kline-empty">暂无K线数据</view>
+      </view>
+      <view wx:if="{{klineList.length > 0}}" class="kline-table">
+        <view class="kline-table-header">
+          <text class="kcell">日期</text>
+          <text class="kcell">开</text>
+          <text class="kcell">收</text>
+          <text class="kcell">高</text>
+          <text class="kcell">低</text>
+          <text class="kcell">涨跌幅</text>
+        </view>
+        <view class="kline-table-body">
+          <block wx:for="{{klineList}}" wx:key="date">
+            <view wx:if="{{index < 8}}" class="kline-table-row">
+              <text class="kcell">{{item.date}}</text>
+              <text class="kcell">{{item.openFmt}}</text>
+              <text class="kcell">{{item.closeFmt}}</text>
+              <text class="kcell">{{item.highFmt}}</text>
+              <text class="kcell">{{item.lowFmt}}</text>
+              <text class="kcell {{item.changePct > 0 ? 'up' : 'down'}}">
+                {{item.changePctFmt}}
+              </text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 资金流向 Tab -->
+    <view wx:if="{{activeTab === 'flow'}}" class="section">
+      <view wx:if="{{capitalFlow && capitalFlow.today}}" class="flow-content">
+        <view class="flow-main">
+          <view class="flow-main-label">主力净流入</view>
+          <view class="flow-main-value {{capitalFlow.today.mainNetInflow > 0 ? 'up' : 'down'}}">
+            {{capitalFlow.today.mainNetInflowFmt}} 亿
+          </view>
+          <view class="flow-main-pct">
+            主力净流入占比 {{capitalFlow.today.mainPctFmt}}
+          </view>
+        </view>
+        <view class="flow-bars">
+          <view class="flow-bar">
+            <text class="flow-bar-label">特大单</text>
+            <view class="flow-bar-track">
+              <view class="flow-bar-fill up" style="width: {{capitalFlow.today.superLargePct}}%"></view>
+            </view>
+            <text class="flow-bar-val">{{capitalFlow.today.superLargePctFmt}}</text>
+          </view>
+          <view class="flow-bar">
+            <text class="flow-bar-label">大单</text>
+            <view class="flow-bar-track">
+              <view class="flow-bar-fill up" style="width: {{capitalFlow.today.largePct}}%"></view>
+            </view>
+            <text class="flow-bar-val">{{capitalFlow.today.largePctFmt}}</text>
+          </view>
+          <view class="flow-bar">
+            <text class="flow-bar-label">中单</text>
+            <view class="flow-bar-track">
+              <view class="flow-bar-fill neutral" style="width: {{capitalFlow.today.mediumPct}}%"></view>
+            </view>
+            <text class="flow-bar-val">{{capitalFlow.today.mediumPctFmt}}</text>
+          </view>
+          <view class="flow-bar">
+            <text class="flow-bar-label">小单</text>
+            <view class="flow-bar-track">
+              <view class="flow-bar-fill down" style="width: {{capitalFlow.today.absSmallPct}}%"></view>
+            </view>
+            <text class="flow-bar-val">{{capitalFlow.today.smallPctFmt}}</text>
+          </view>
+        </view>
+        <view class="flow-note" wx:if="{{capitalFlow.note}}">{{capitalFlow.note}}</view>
+      </view>
+      <view wx:else class="empty-block">暂无资金流向数据</view>
+    </view>
+
+    <!-- 公告 Tab -->
+    <view wx:if="{{activeTab === 'news'}}" class="section">
+      <view wx:if="{{announcements.length > 0}}" class="ann-list">
+        <view wx:for="{{announcements}}" wx:key="id" class="ann-item">
+          <view class="ann-time">{{item.time}}</view>
+          <view class="ann-title">{{item.title}}</view>
+          <view wx:if="{{item.columns}}" class="ann-cols">📑 {{item.columns}}</view>
+        </view>
+      </view>
+      <view wx:else class="empty-block">暂无公告</view>
+    </view>
+
+    <!-- 详情 Tab -->
+    <view wx:if="{{activeTab === 'info'}}" class="section">
+      <view class="info-grid">
+        <view class="info-card">
+          <text class="info-card-label">总市值</text>
+          <text class="info-card-val">{{quote.totalMarketCapFmt}}亿</text>
+        </view>
+        <view class="info-card">
+          <text class="info-card-label">流通市值</text>
+          <text class="info-card-val">{{quote.floatMarketCapFmt}}亿</text>
+        </view>
+        <view class="info-card">
+          <text class="info-card-label">市盈率(动)</text>
+          <text class="info-card-val">{{quote.peDynamicFmt}}</text>
+        </view>
+        <view class="info-card">
+          <text class="info-card-label">振幅</text>
+          <text class="info-card-val">{{quote.amplitudeFmt}}%</text>
+        </view>
+        <view class="info-card">
+          <text class="info-card-label">涨停价</text>
+          <text class="info-card-val up">{{quote.upperLimitFmt}}</text>
+        </view>
+        <view class="info-card">
+          <text class="info-card-label">跌停价</text>
+          <text class="info-card-val down">{{quote.lowerLimitFmt}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 错误提示 -->
+    <view wx:if="{{error}}" class="error-block">
+      <text>⚠️ 数据加载失败：{{error}}</text>
+    </view>
+  </block>
+</view>

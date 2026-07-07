@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "股票详情",
+  "backgroundColor": "#1A1A2E",
+  "backgroundTextStyle": "light",
+  "enablePullDownRefresh": true
+}

@@ -1,0 +1,148 @@
+<view class="container">
+  <view wx:if="{{loading && !quote}}" class="loading-state">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <view wx:elif="{{error && !quote}}" class="error-page">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">数据加载失败</text>
+    <button class="btn btn-primary" bindtap="loadAll">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view class="quote-card {{quote.changePct > 0 ? 'up' : (quote.changePct < 0 ? 'down' : '')}}">
+      <view class="quote-header">
+        <view class="quote-name-wrap">
+          <text class="quote-name">{{quote.name || name}}</text>
+          <text class="quote-code">{{code}}</text>
+        </view>
+      </view>
+
+      <view class="quote-price-row">
+        <text class="quote-price">{{quote.lastPriceFmt}}</text>
+        <text class="quote-change">
+          {{quote.changeAmountFmt}} ({{quote.changePctFmt}})
+        </text>
+      </view>
+
+      <view class="quote-info-row">
+        <view class="quote-info-item">
+          <text class="info-label">今开</text>
+          <text class="info-val">{{quote.openPriceFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">昨收</text>
+          <text class="info-val">{{quote.preCloseFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">最高</text>
+          <text class="info-val up">{{quote.highPriceFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">最低</text>
+          <text class="info-val down">{{quote.lowPriceFmt}}</text>
+        </view>
+      </view>
+
+      <view class="quote-info-row">
+        <view class="quote-info-item">
+          <text class="info-label">成交量</text>
+          <text class="info-val">{{quote.volumeFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">成交额</text>
+          <text class="info-val">{{quote.amountFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">换手</text>
+          <text class="info-val">{{quote.turnoverRateFmt}}%</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">振幅</text>
+          <text class="info-val">{{quote.amplitudeFmt}}%</text>
+        </view>
+      </view>
+
+      <view class="quote-info-row">
+        <view class="quote-info-item">
+          <text class="info-label">涨停价</text>
+          <text class="info-val up">{{quote.upperLimitFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">跌停价</text>
+          <text class="info-val down">{{quote.lowerLimitFmt}}</text>
+        </view>
+        <view class="quote-info-item">
+          <text class="info-label">市盈率</text>
+          <text class="info-val">{{quote.peDynamicFmt}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{marketSummary}}" class="section">
+      <view class="section-header">
+        <text class="section-title">📊 市场概况</text>
+      </view>
+      <view class="market-summary">
+        <view class="market-item up">
+          <text class="market-label">上涨</text>
+          <text class="market-val">{{marketSummary.upCount}}</text>
+          <text class="market-pct">{{marketSummary.upPct}}%</text>
+        </view>
+        <view class="market-item flat">
+          <text class="market-label">平盘</text>
+          <text class="market-val">{{marketSummary.flatCount}}</text>
+          <text class="market-pct">{{marketSummary.flatPct}}%</text>
+        </view>
+        <view class="market-item down">
+          <text class="market-label">下跌</text>
+          <text class="market-val">{{marketSummary.downCount}}</text>
+          <text class="market-pct">{{marketSummary.downPct}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">📈 走势</text>
+      </view>
+      <view class="kline-period">
+        <view wx:for="{{klineTypes}}" wx:key="value"
+              class="period-tag {{klineType === item.value ? 'active' : ''}}"
+              data-value="{{item.value}}"
+              bindtap="onKLineTypeChange">
+          {{item.label}}
+        </view>
+      </view>
+      <view class="kline-canvas-wrap">
+        <canvas type="2d" id="klineCanvas" class="kline-canvas"></canvas>
+        <view wx:if="{{klineList.length === 0 && minuteList.length === 0}}" class="kline-empty">暂无数据</view>
+      </view>
+      <view wx:if="{{klineList.length > 0}}" class="kline-table">
+        <view class="kline-table-header">
+          <text class="kcell">日期</text>
+          <text class="kcell">开</text>
+          <text class="kcell">收</text>
+          <text class="kcell">高</text>
+          <text class="kcell">低</text>
+          <text class="kcell">涨跌幅</text>
+        </view>
+        <view class="kline-table-body">
+          <block wx:for="{{klineList}}" wx:key="date">
+            <view wx:if="{{index < 8}}" class="kline-table-row">
+              <text class="kcell">{{item.date}}</text>
+              <text class="kcell">{{item.openFmt}}</text>
+              <text class="kcell">{{item.closeFmt}}</text>
+              <text class="kcell">{{item.highFmt}}</text>
+              <text class="kcell">{{item.lowFmt}}</text>
+              <text class="kcell {{item.changePct > 0 ? 'up' : 'down'}}">
+                {{item.changePctFmt}}
+              </text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

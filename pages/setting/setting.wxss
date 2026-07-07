@@ -1,0 +1,85 @@
+/* 设置页面样式 */
+
+.container {
+  min-height: 100vh;
+  background-color: #1A1A2E;
+  padding-bottom: 24px;
+}
+
+/* 区块 */
+.section {
+  margin-top: 16px;
+  padding: 0 12px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #B0B0B0;
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+/* 设置项 */
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background-color: #16213E;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 0;
+}
+
+.setting-item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.setting-item:last-child {
+  border-radius: 0 0 8px 8px;
+  border-bottom: none;
+}
+
+.setting-item:only-child {
+  border-radius: 8px;
+}
+
+.setting-label {
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.setting-arrow {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 选项组 */
+.setting-options {
+  display: flex;
+  gap: 8px;
+}
+
+.option {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #B0B0B0;
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.option.active {
+  background-color: #FFD700;
+  color: #1A1A2E;
+  font-weight: 500;
+}
+
+/* 开关样式 */
+switch .wx-switch-input {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+switch .wx-switch-input.wx-switch-input-checked {
+  background-color: #FFD700;
+}
