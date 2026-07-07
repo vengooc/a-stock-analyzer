@@ -25,12 +25,12 @@
 
 ### 项目位置
 ```
-/Users/vengo/Openclaw/workspace/a-stock-analyzer/
+/Users/vengo/Trae/a-stock-analyzer/
 ```
 
 ### 备份位置
 ```
-完整项目: workspace/a-stock-analyzer-backup-20260630-002624.tar.gz
+完整项目: /Users/vengo/Trae/a-stock-analyzer/ (GitHub: https://github.com/vengooc/a-stock-analyzer)
 旧版 API: utils/api-eastmoney-backup.js
 ```
 
@@ -45,24 +45,31 @@
 ```
 a-stock-analyzer/
 ├── app.js              # 全局入口
-├── app.json            # 应用配置
-├── app.wxss            # 全局样式
-├── pages/              # 9 个页面
-│   ├── index/          # 首页
+├── app.json            # 应用配置（注册 11 个页面）
+├── app.wxss            # 全局样式（深色主题）
+├── project.config.json # 项目配置
+├── project.private.config.json # 私有配置
+├── sitemap.json        # SEO 站点地图
+├── pages/              # 11 个页面
+│   ├── index/          # 首页（市场概览）
+│   ├── index-detail/   # 指数详情（分时/K线）
 │   ├── board/          # 板块列表
-│   ├── board-detail/   # 板块详情
-│   ├── stock-detail/   # 股票详情（4 Tab）
+│   ├── board-detail/   # 板块详情（成分股）
+│   ├── stock-detail/   # 股票详情（4 Tab + Canvas K线）
+│   ├── stock/          # 行情搜索（搜索股票+加自选）
 │   ├── watch/          # 自选股
-│   ├── event/          # 事件
+│   ├── event/          # 热点事件
 │   ├── event-detail/   # 事件详情
-│   ├── setting/        # 设置
-│   └── debug/          # API 调试
+│   ├── setting/        # 设置（含 debug 入口）
+│   └── debug/          # API 调试面板
 ├── utils/              # 工具层
-│   ├── api.js          # 股票 API 封装（核心）
-│   ├── data.js         # 格式化
-│   └── storage.js      # 本地存储
-├── utils/api-eastmoney-backup.js  # 旧版 API 备份
-├── 1-需求分析.md         # 📋 业务文档
+│   ├── api.js          # 股票 API 封装（核心，800+ 行）
+│   ├── api-eastmoney-backup.js # 旧版东方财富 API（备份）
+│   ├── data.js         # 数据格式化
+│   └── storage.js      # 本地存储（缓存/自选/设置）
+├── assets/             # 静态资源
+│   └── icons/          # TabBar 图标（12 个 PNG）
+├── 1-需求分析.md       # 📋 业务文档
 ├── 2-UI设计.md         # 🎨 设计文档
 ├── 3-详细实现.md       # 🛠 技术文档
 └── README.md           # 本文件
@@ -79,11 +86,11 @@ a-stock-analyzer/
 
 ## 📊 关键指标
 
-- **总代码量**：~7800 行（含调试页）
-- **页面数**：9 个
-- **API 方法**：20 个
-- **本地字典**：99 只股票 + 20 个板块
-- **最后更新**：2026-06-30
+- **总代码量**：~12000 行（含调试页）
+- **页面数**：11 个
+- **API 方法**：23 个
+- **本地字典**：99 只股票 + 40 个板块（概念+行业）
+- **最后更新**：2026-07-07
 
 ## 🔧 配置
 
@@ -99,6 +106,8 @@ np-anotice-stock.eastmoney.com
 
 ## 📝 版本
 
+- **v1.2**（2026-07-07）：指数详情页 + 市场搜索页 + 本地搜索优化
+- **v1.1**（2026-07-06）：修复指数成交额字段映射 + 本地板块数据
 - **v1.0**（2026-06-30）：腾讯财经数据源 + 完整功能
 - **v0.9**（2026-06-29）：调试页 + 股票详情
 - **v0.5**（2026-06-28）：接入真实 API
@@ -107,4 +116,4 @@ np-anotice-stock.eastmoney.com
 ---
 
 **维护者**：vengo bot  
-**最后更新**：2026-06-30 01:22
+**最后更新**：2026-07-07
